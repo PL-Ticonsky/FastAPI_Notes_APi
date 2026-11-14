@@ -1,4 +1,13 @@
-# Notes API
+<h1 align="center">Notes API</h1>
+
+<p align="center">API REST para crear, consultar, actualizar y eliminar notas con FastAPI, SQLAlchemy y PostgreSQL.</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Proyecto-FastAPI%20%C2%B7%20SQLAlchemy-31506a" alt="FastAPI · SQLAlchemy">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-Ver%20archivo-31506a" alt="Ver licencia"></a>
+</p>
+
+[Contrato de la API](Notes/api_contract.md) · [Modelo de datos](Notes/ERD.md) · [Descripción del sistema](Notes/SYSTEM_OVERVIEW.md)
 
 A **minimal, well-structured Notes API** built with **FastAPI** and **PostgreSQL**, designed as an educational MVP to practice **backend architecture**, **database design**, and **API development** with production-minded conventions.
 
