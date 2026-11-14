@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Proyecto-FastAPI%20%C2%B7%20SQLAlchemy-31506a" alt="FastAPI · SQLAlchemy">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-Ver%20archivo-31506a" alt="Ver licencia"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-GPL--3.0-31506a" alt="Licencia GPL-3.0"></a>
 </p>
 
 [Contrato de la API](Notes/api_contract.md) · [Modelo de datos](Notes/ERD.md) · [Descripción del sistema](Notes/SYSTEM_OVERVIEW.md)
