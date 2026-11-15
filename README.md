@@ -1,191 +1,73 @@
-<h1 align="center">Notes API</h1>
+# Scriptorium · Notes API
 
-<p align="center">API REST para crear, consultar, actualizar y eliminar notas con FastAPI, SQLAlchemy y PostgreSQL.</p>
+Un cuaderno digital inspirado en los manuscritos medievales. Escribe sobre pergamino, vuelve a tus ideas con una búsqueda y organiza tus notas en un archivo de fácil consulta. La interfaz en español se conecta a una API REST construida con FastAPI y PostgreSQL.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Proyecto-FastAPI%20%C2%B7%20SQLAlchemy-31506a" alt="FastAPI · SQLAlchemy">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-GPL--3.0-31506a" alt="Licencia GPL-3.0"></a>
-</p>
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-725137?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-API_REST-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Base_de_datos-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Sin_framework-EED994?logo=javascript&logoColor=3B2819)](app/frontend)
+[![Licencia GPL-3.0](https://img.shields.io/badge/Licencia-GPL--3.0-725137)](LICENSE)
 
-[Contrato de la API](Notes/api_contract.md) · [Modelo de datos](Notes/ERD.md) · [Descripción del sistema](Notes/SYSTEM_OVERVIEW.md)
+[Inicio local](#inicio-local) · [Contrato de la API](Notes/api_contract.md) · [Modelo de datos](Notes/ERD.md) · [Descripción del sistema](Notes/SYSTEM_OVERVIEW.md)
 
-A **minimal, well-structured Notes API** built with **FastAPI** and **PostgreSQL**, designed as an educational MVP to practice **backend architecture**, **database design**, and **API development** with production-minded conventions.
+## Vista previa
 
-The goal of this project is **clarity over cleverness**: clean boundaries, predictable behavior, and reproducible setup.
+Capturas del archivo y del editor con notas de ejemplo. Abre cualquiera para verla a tamaño completo.
 
----
+| Archivo de manuscritos | Editor |
+| :---: | :---: |
+| <a href="Notes/assets/scriptorium-archivo.jpg"><img src="Notes/assets/scriptorium-archivo.jpg" width="380" alt="Archivo de manuscritos con buscador y tarjetas de pergamino"></a> | <a href="Notes/assets/scriptorium-editor.jpg"><img src="Notes/assets/scriptorium-editor.jpg" width="280" alt="Editor de manuscritos con título, texto y contador de caracteres"></a> |
 
-##  Features
+## Qué puedes hacer
 
-* Create notes
-* Update notes
-* Delete notes
-* List all notes
-* Retrieve a single note by ID
-* Health checks for API and database
+- **Escribir y revisar.** Crea, edita y elimina notas desde el archivo.
+- **Encontrar una idea.** Busca por título o contenido, filtra notas recientes y ordena por fecha o título.
+- **Cambiar de vista.** Alterna entre cuadrícula y lista; pulsa `/` para ir al buscador.
 
-**Out of scope (by design):**
+## Cómo está hecho
 
-* Authentication & authorization
-* Multi-user support
-* Offline support
-* Native mobile applications
+| Capa | Tecnología y responsabilidad |
+| --- | --- |
+| Interfaz | HTML, CSS y JavaScript para el archivo, el editor y la búsqueda. |
+| API | FastAPI y Pydantic para las rutas y la validación de datos. |
+| Persistencia | SQLAlchemy y psycopg para guardar las notas en PostgreSQL. |
 
----
+El proyecto está pensado como un cuaderno de uso local, sin cuentas de usuario. Los controles `/health` y `/health/db` permiten consultar el estado de la API y de la conexión a PostgreSQL.
 
-## Tech Stack
+## Inicio local
 
-* **Python** 3.12+
-* **FastAPI**
-* **SQLAlchemy** 2.x
-* **PostgreSQL** 16+
-* **psycopg** (v3)
-* **HTML / CSS / Vanilla JavaScript** (minimal frontend)
+Necesitas Python 3.12+ y PostgreSQL 16+. Crea una base llamada `notes_db` y un usuario con permisos sobre ella. Ejecuta `database/schema.sql` en esa base. Puedes cargar `database/seed.sql` si quieres datos iniciales.
 
----
-
-##  Project Structure
-
-```text
-.
-├── app/
-│   ├── backend/
-│   │   ├── api/              # FastAPI routers (HTTP layer)
-│   │   ├── core/             # Application configuration
-│   │   ├── db/               # Database session and low-level setup
-│   │   ├── models/           # SQLAlchemy ORM models
-│   │   ├── repositories/     # Data access layer
-│   │   ├── schemas/          # Pydantic request/response schemas
-│   │   ├── main.py           # FastAPI application entrypoint
-│   │   └── requirements.txt
-│   └── frontend/
-│       ├── index.html
-│       ├── styles.css
-│       └── app.js
-├── db/
-│   ├── schema.sql            # Database schema
-│   └── seed.sql              # Seed data
-├── .env.example
-└── README.md
-```
-
----
-
-##  Architecture Overview
-
-The backend follows a **layered architecture** with clear responsibilities:
-
-* **API layer** – HTTP routing, validation, and request/response handling
-* **Service layer** – Business logic (kept intentionally minimal for this MVP)
-* **Repository layer** – Database access using SQLAlchemy
-* **Model layer** – ORM models mapped to PostgreSQL tables
-
-`main.py` is responsible **only** for wiring dependencies and routers.
-It contains **no business logic** and **no direct database access**.
-
----
-
-##  Requirements
-
-* Python 3.12+
-* PostgreSQL 16+
-* `pip` and `venv`
-
----
-
-##  Environment Variables
-
-Create a `.env` file based on `.env.example`:
-
-```env
-DATABASE_URL=postgresql+psycopg://notes_user:notes_pass@localhost:5432/notes_db
-```
-
----
-
-##  Database Setup
-
-### Install PostgreSQL
+Desde la raíz del repositorio:
 
 ```bash
-sudo apt install postgresql postgresql-contrib
-sudo systemctl enable --now postgresql
-```
-
-### Create database and user
-
-```bash
-sudo -iu postgres psql << 'SQL'
-CREATE USER notes_user WITH PASSWORD 'notes_pass';
-CREATE DATABASE notes_db OWNER notes_user;
-\c notes_db
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-SQL
-```
-
-### Create schema and seed data
-
-```bash
-sudo -iu postgres psql -d notes_db -f db/schema.sql
-sudo -iu postgres psql -d notes_db -f db/seed.sql
-```
-
----
-
-## 🚀 Backend Setup
-
-```bash
-cd app/backend
+cp .env.example .env
+# Ajusta DATABASE_URL con tu usuario, contraseña y puerto de PostgreSQL.
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload
+pip install -r app/backend/requirements.txt
+cd app/backend
+uvicorn main:app --reload --port 8000
 ```
 
-The API will be available at:
-
-* **API:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-* **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-
----
-
-##  Frontend Setup
-
-The frontend is intentionally minimal and framework-free.
+En otra terminal, desde la raíz del repositorio:
 
 ```bash
-cd app/frontend
-python3 -m http.server 5173
+python3 -m http.server 5173 --bind 127.0.0.1 --directory app/frontend
 ```
 
-Open in your browser:
+[Abre Scriptorium](http://127.0.0.1:5173/) o consulta [Swagger UI](http://127.0.0.1:8000/docs).
 
-```
-http://127.0.0.1:5173
-```
+## Rutas principales
 
----
+| Método | Ruta | Acción |
+| --- | --- | --- |
+| GET | `/notes` | Listar notas |
+| POST | `/notes` | Crear una nota |
+| GET | `/notes/{id}` | Consultar una nota |
+| PUT | `/notes/{id}` | Actualizar una nota |
+| DELETE | `/notes/{id}` | Eliminar una nota |
 
-##  API Endpoints (Summary)
+## Licencia
 
-```text
-GET    /notes
-POST   /notes
-GET    /notes/{id}
-PUT    /notes/{id}
-DELETE /notes/{id}
-GET    /health
-GET    /health/db
-```
-
----
-
-##  Project Status
-
-This project represents a **completed MVP**.
-
-Potential extensions such as authentication, migrations, automated tests, and Docker support are intentionally **out of scope** to keep the focus on core backend fundamentals.
-
----
-
-**License:** Educational / Personal use
+Distribuido bajo la [GNU GPL v3.0](LICENSE).

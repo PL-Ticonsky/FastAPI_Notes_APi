@@ -1,58 +1,71 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notes App MVP</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="container">
-      <h1>Notes</h1>
-      <p class="muted">Simple MVP — FastAPI + PostgreSQL</p>
-    </header>
-
-    <main class="container grid">
-      <section class="card">
-        <h2>Create / Edit</h2>
-
-        <form id="noteForm" class="stack">
-          <input type="hidden" id="noteId" />
-
-          <label>
-            Title
-            <input id="title" type="text" maxlength="200" required />
-          </label>
-
-          <label>
-            Content
-            <textarea id="content" rows="8" maxlength="5000"></textarea>
-          </label>
-
-          <div class="row">
-            <button type="submit" id="saveBtn">Save</button>
-            <button type="button" id="cancelBtn" class="ghost" hidden>Cancel</button>
-          </div>
-
-          <p id="formMsg" class="muted"></p>
-        </form>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#302820">
+  <meta name="description" content="Un refugio para tus palabras. Escribe y conserva tus notas en un escritorio inspirado en los manuscritos medievales.">
+  <title>Scriptorium — Tus manuscritos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='5' fill='%23732f29'/%3E%3Ctext x='10' y='30' fill='%23f4e6c7' font-family='serif' font-size='32'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-quill" viewBox="0 0 24 24"><path d="M20 3C12 1 5 7 7 16L3 21M7 16c8 1 14-5 13-13ZM7 16 17 6M11 12h6M13 10V6"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M12 6C9 3 5 3 2 4v15c4-1 7 0 10 2 3-2 6-3 10-2V4c-3-1-7-1-10 2Z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="3" y="15" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 5h13M8 12h13M8 19h13M3 5h1M3 12h1M3 19h1"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 9a8 8 0 1 0 0 7M20 3v6h-6"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Saltar al contenido</a>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Navegación principal">
+    <a class="brand" href="./" aria-label="Scriptorium, inicio"><span class="brand-mark">S</span><span>Scriptorium<small>EL ARTE DE RECORDAR</small></span></a>
+    <div class="side-rule"><span>✦</span></div>
+    <p class="nav-caption">TU ESCRITORIO</p>
+    <nav>
+      <button class="nav-item active" data-filter="all" aria-current="page"><svg><use href="#i-book"/></svg><span>Mis manuscritos</span><span id="totalCount" class="count">—</span></button>
+      <button class="nav-item" data-filter="recent"><svg><use href="#i-clock"/></svg><span>Últimos siete días</span></button>
+    </nav>
+    <div class="side-note"><span class="little-star">✧</span><p>Lo que se escribe,<br>permanece.</p><span class="tiny-rule"></span><small>UN REFUGIO PARA TUS PALABRAS</small></div>
+    <div class="sidebar-bottom"><span class="seal-small">S</span><div>Archivo personal<small id="connection"><span class="status-dot"></span>Conectando…</small></div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span>ARCHIVO PERSONAL <span class="crumb">/</span> <span id="breadcrumb">MANUSCRITOS</span></span><span class="topbar-right">EST. MMXXVI <span class="mini-flower">✥</span></span></header>
+    <main id="main">
+      <section class="intro" aria-labelledby="pageTitle">
+        <div class="intro-copy"><p class="eyebrow"><span></span> LA MEMORIA EN TINTA</p><h1 id="pageTitle">Mis manuscritos<span>.</span></h1><p class="subtitle">Ideas, pensamientos y pequeñas historias.<br>Un lugar donde cada palabra deja su huella.</p><button id="newNote" class="button primary"><svg><use href="#i-quill"/></svg>Nuevo manuscrito<span class="button-plus">+</span></button></div>
+        <div class="hero-ornament" aria-hidden="true"><div class="orbit"></div><div class="orbit inner"></div><span class="ornament-top">ARS · SCRIBENDI</span><svg class="hero-quill"><use href="#i-quill"/></svg><span class="ornament-bottom">TINTA & MEMORIA</span><span class="ornament-star star-one">✧</span><span class="ornament-star star-two">✦</span></div>
       </section>
-
-      <section class="card">
-        <div class="row space">
-          <h2>All notes</h2>
-          <button id="refreshBtn" class="ghost">Refresh</button>
-        </div>
-
-        <div id="listMsg" class="muted"></div>
-        <ul id="notesList" class="list"></ul>
+      <div class="chapter-divider"><span></span><b>❦</b><span></span></div>
+      <section class="collection" aria-label="Colección de notas">
+        <div class="collection-heading"><h2 id="collectionTitle">La colección</h2><p id="resultCount" aria-live="polite">Abriendo el archivo…</p></div>
+        <div class="toolbar"><label class="search"><svg><use href="#i-search"/></svg><input id="search" type="search" placeholder="Buscar entre tus palabras…" aria-label="Buscar manuscritos"><kbd>/</kbd></label><div class="toolbar-actions"><label class="sort-label"><span class="sr-only">Ordenar manuscritos</span><select id="sort"><option value="updated">Última modificación</option><option value="created">Más recientes</option><option value="title">Título: A — Z</option></select></label><div class="view-switch" aria-label="Vista de la colección"><button id="gridView" class="icon-button selected" aria-label="Vista de cuadrícula" aria-pressed="true"><svg><use href="#i-grid"/></svg></button><button id="listView" class="icon-button" aria-label="Vista de lista" aria-pressed="false"><svg><use href="#i-list"/></svg></button></div><button id="refresh" class="icon-button refresh" aria-label="Actualizar colección" title="Actualizar colección"><svg><use href="#i-refresh"/></svg></button></div></div>
+        <div id="collectionStatus" class="collection-status" role="status">Consultando tus manuscritos…</div>
+        <div id="notesList" class="notes-grid" aria-busy="true"></div>
       </section>
+      <footer class="page-footer"><span>SCRIPTORIUM</span><p>Las palabras pasan. La tinta permanece.</p><span class="footer-fleur">❦</span></footer>
     </main>
-
-    <footer class="container muted small">
-      API: <code id="apiBase"></code>
-    </footer>
-
-    <script src="./app.js"></script>
-  </body>
+  </div>
+</div>
+<dialog id="editor" class="editor parchment" aria-labelledby="editorHeading">
+  <form id="noteForm">
+    <div class="editor-top"><p class="eyebrow">EL ESCRITORIO DEL ESCRIBA</p><button type="button" id="closeEditor" class="icon-button" aria-label="Cerrar editor"><svg><use href="#i-close"/></svg></button></div>
+    <h2 id="editorHeading">Un nuevo manuscrito</h2><p class="editor-subtitle">Dale un lugar a lo que no quieres olvidar.</p>
+    <input id="noteId" type="hidden">
+    <label class="field-label" for="title">TÍTULO DEL MANUSCRITO</label><input id="title" class="title-input" maxlength="200" required placeholder="Aquí comienza tu historia…">
+    <label class="field-label" for="content">TUS PALABRAS</label><textarea id="content" maxlength="5000" rows="9" placeholder="Deja que la tinta encuentre su camino…"></textarea>
+    <div class="editor-meta"><span id="editDate">Un espacio en blanco, infinitas posibilidades.</span><span id="charCount">0 / 5000</span></div>
+    <p id="formMsg" class="form-message" role="alert"></p>
+    <div class="editor-bottom"><button type="button" id="cancelEditor" class="button secondary">Volver al archivo</button><button id="saveBtn" class="button primary" type="submit"><svg><use href="#i-quill"/></svg><span>Guardar manuscrito</span></button></div>
+  </form>
+</dialog>
+<dialog id="deleteDialog" class="delete-dialog parchment" aria-labelledby="deleteHeading"><div class="delete-emblem"><svg><use href="#i-trash"/></svg></div><p class="eyebrow">DEL ARCHIVO AL OLVIDO</p><h2 id="deleteHeading">¿Eliminar este manuscrito?</h2><p id="deleteDescription"></p><p class="delete-warning">Esta acción no se puede deshacer.</p><p id="deleteError" role="alert"></p><div class="delete-actions"><button id="cancelDelete" class="button secondary">Conservar</button><button id="confirmDelete" class="button primary">Sí, eliminar</button></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
 </html>
