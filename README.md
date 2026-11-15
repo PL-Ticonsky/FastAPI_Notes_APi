@@ -34,6 +34,17 @@ Capturas del archivo y del editor con notas de ejemplo. Abre cualquiera para ver
 
 El proyecto está pensado como un cuaderno de uso local, sin cuentas de usuario. Los controles `/health` y `/health/db` permiten consultar el estado de la API y de la conexión a PostgreSQL.
 
+## Cómo viaja una nota
+
+La interfaz envía las acciones a FastAPI. El navegador también permite buscar y ordenar la colección que ya cargó.
+
+```mermaid
+flowchart LR
+    A["Archivo y editor"] -->|Crear, consultar, editar o borrar| B["API REST · FastAPI"]
+    B --> C["SQLAlchemy"]
+    C --> D["Notas en PostgreSQL"]
+```
+
 ## Inicio local
 
 Necesitas Python 3.12+ y PostgreSQL 16+. Crea una base llamada `notes_db` y un usuario con permisos sobre ella. Ejecuta `database/schema.sql` en esa base. Puedes cargar `database/seed.sql` si quieres datos iniciales.
